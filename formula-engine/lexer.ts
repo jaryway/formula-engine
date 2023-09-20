@@ -22,71 +22,94 @@ NaN
 () > 一元运算符 > 乘除 > 加减、位运算 > 比较运算符 > 逻辑运算符
  */
 
-import { createToken, Lexer, TokenType } from 'chevrotain';
+import { createToken, Lexer, TokenType } from "chevrotain";
 
 enum TokenName {
-  LParen = 'LParen',
-  RParen = 'RParen',
-  LSquare = 'LSquare',
-  RSquare = 'RSquare',
-  WhiteSpace = 'WhiteSpace',
-  Comma = 'Comma',
-  Func = 'Func',
+  LParen = "LParen",
+  RParen = "RParen",
+  LSquare = "LSquare",
+  RSquare = "RSquare",
+  WhiteSpace = "WhiteSpace",
+  Comma = "Comma",
+  Func = "Func",
 
-  StringLiteral = 'StringLiteral',
-  DateLiteral = 'DateLiteral',
-  BooleanLiteral = 'BooleanLiteral',
-  NumberLiteral = 'NumberLiteral',
-  NullLiteral = 'NullLiteral',
-  UndefinedLiteral = 'UndefinedLiteral',
-  NaNLiteral = 'NaNLiteral',
+  StringLiteral = "StringLiteral",
+  DateLiteral = "DateLiteral",
+  BooleanLiteral = "BooleanLiteral",
+  NumberLiteral = "NumberLiteral",
+  NullLiteral = "NullLiteral",
+  UndefinedLiteral = "UndefinedLiteral",
+  NaNLiteral = "NaNLiteral",
+  Reference = "Reference",
 
-  AdditionOperator = 'AdditionOperator',
-  Addition = 'Addition',
-  Subtraction = 'Subtraction',
-  MultiplicationOperator = 'MultiplicationOperator',
-  Multiplication = 'Multiplication',
-  Division = 'Division',
+  AdditionOperator = "AdditionOperator",
+  Addition = "Addition",
+  Subtraction = "Subtraction",
+  MultiplicationOperator = "MultiplicationOperator",
+  Multiplication = "Multiplication",
+  Division = "Division",
 
   // 等于、不等于、全等于、不全等于、大于、大于等于、小于、小于等于
-  ComparisonOperator = 'ComparisonOperator',
-  EqualLoose = 'EqualLoose',
-  NotEqualLoose = 'NotEqualLoose',
-  EqualStrict = 'EqualStrict',
-  NotEqualStrict = 'NotEqualStrict',
-  Greater = 'Greater',
-  GreaterOrEqual = 'GreaterOrEqual',
-  Less = 'Less',
-  LessOrEqual = 'LessOrEqual',
+  ComparisonOperator = "ComparisonOperator",
+  EqualLoose = "EqualLoose",
+  NotEqualLoose = "NotEqualLoose",
+  EqualStrict = "EqualStrict",
+  NotEqualStrict = "NotEqualStrict",
+  Greater = "Greater",
+  GreaterOrEqual = "GreaterOrEqual",
+  Less = "Less",
+  LessOrEqual = "LessOrEqual",
 
-  BitwiseOperator = 'BitwiseOperator',
-  BitwiseAnd = 'BitwiseAnd',
-  BitwiseOr = 'BitwiseOr',
+  BitwiseOperator = "BitwiseOperator",
+  BitwiseAnd = "BitwiseAnd",
+  BitwiseOr = "BitwiseOr",
 
-  LogicalOperator = 'LogicalOperator',
-  LogicalAnd = 'LogicalAnd',
-  LogicalOr = 'LogicalOr',
+  LogicalOperator = "LogicalOperator",
+  LogicalAnd = "LogicalAnd",
+  LogicalOr = "LogicalOr",
 
-  UnaryOperator = 'UnaryOperator',
-  Increment = 'Increment',
-  Decrement = 'Decrement',
-  LogicalNot = 'LogicalNot',
+  UnaryOperator = "UnaryOperator",
+  Increment = "Increment",
+  Decrement = "Decrement",
+  LogicalNot = "LogicalNot",
   // Positive = 'Positive', // 正值
   // Negative = 'Negative', // 负值
 }
 
-const AdditionOperator = createToken({ name: TokenName.AdditionOperator, pattern: Lexer.NA });
-const MultiplicationOperator = createToken({ name: TokenName.MultiplicationOperator, pattern: Lexer.NA });
-const ComparisonOperator = createToken({ name: TokenName.ComparisonOperator, pattern: Lexer.NA });
-const BitwiseOperator = createToken({ name: TokenName.BitwiseOperator, pattern: Lexer.NA });
-const LogicalOperator = createToken({ name: TokenName.LogicalOperator, pattern: Lexer.NA });
-const UnaryOperator = createToken({ name: TokenName.UnaryOperator, pattern: Lexer.NA });
+const AdditionOperator = createToken({
+  name: TokenName.AdditionOperator,
+  pattern: Lexer.NA,
+});
+const MultiplicationOperator = createToken({
+  name: TokenName.MultiplicationOperator,
+  pattern: Lexer.NA,
+});
+const ComparisonOperator = createToken({
+  name: TokenName.ComparisonOperator,
+  pattern: Lexer.NA,
+});
+const BitwiseOperator = createToken({
+  name: TokenName.BitwiseOperator,
+  pattern: Lexer.NA,
+});
+const LogicalOperator = createToken({
+  name: TokenName.LogicalOperator,
+  pattern: Lexer.NA,
+});
+const UnaryOperator = createToken({
+  name: TokenName.UnaryOperator,
+  pattern: Lexer.NA,
+});
 
 const LParen = createToken({ name: TokenName.LParen, pattern: /\(/ });
 const RParen = createToken({ name: TokenName.RParen, pattern: /\)/ });
 const LSquare = createToken({ name: TokenName.LSquare, pattern: /\[/ });
 const RSquare = createToken({ name: TokenName.RSquare, pattern: /\]/ });
-const WhiteSpace = createToken({ name: TokenName.WhiteSpace, pattern: /\s+/, group: Lexer.SKIPPED });
+const WhiteSpace = createToken({
+  name: TokenName.WhiteSpace,
+  pattern: /\s+/,
+  group: Lexer.SKIPPED,
+});
 const Comma = createToken({ name: TokenName.Comma, pattern: /,/ });
 const Func = createToken({ name: TokenName.Func, pattern: /[A-Z0-9_]+/ });
 
@@ -94,15 +117,31 @@ const StringLiteral = createToken({
   name: TokenName.StringLiteral,
   pattern: /("(\\\\|\\"|[^"])*"|'(\\\\|\\'|[^'])*')/,
 });
-const DateLiteral = createToken({ name: TokenName.DateLiteral, pattern: /[\d-+]+T[\d:.]+Z/ });
+const DateLiteral = createToken({
+  name: TokenName.DateLiteral,
+  pattern: /[\d-+]+T[\d:.]+Z/,
+});
 const NumberLiteral = createToken({
   name: TokenName.NumberLiteral,
   pattern: /[0-9]+(\.[0-9]+)?(e[+-]?[0-9]+)?/,
 });
-const BooleanLiteral = createToken({ name: TokenName.BooleanLiteral, pattern: /(true|false)/ });
-const NullLiteral = createToken({ name: TokenName.NullLiteral, pattern: /null/ });
-const UndefinedLiteral = createToken({ name: TokenName.UndefinedLiteral, pattern: /undefined/ });
+const BooleanLiteral = createToken({
+  name: TokenName.BooleanLiteral,
+  pattern: /(true|false)/,
+});
+const NullLiteral = createToken({
+  name: TokenName.NullLiteral,
+  pattern: /null/,
+});
+const UndefinedLiteral = createToken({
+  name: TokenName.UndefinedLiteral,
+  pattern: /undefined/,
+});
 const NaNLiteral = createToken({ name: TokenName.NaNLiteral, pattern: /NaN/ });
+const Reference = createToken({
+  name: TokenName.Reference,
+  pattern: /\{[A-Za-z_0-9\.]+\}/,
+});
 
 const Addition = createToken({
   name: TokenName.Addition,
@@ -180,12 +219,32 @@ const BitwiseOr = createToken({
   categories: [BitwiseOperator, ComparisonOperator],
 });
 
-const LogicalAnd = createToken({ name: TokenName.LogicalAnd, pattern: /&&/, categories: [LogicalOperator] });
-const LogicalOr = createToken({ name: TokenName.LogicalOr, pattern: /\|\|/, categories: [LogicalOperator] });
+const LogicalAnd = createToken({
+  name: TokenName.LogicalAnd,
+  pattern: /&&/,
+  categories: [LogicalOperator],
+});
+const LogicalOr = createToken({
+  name: TokenName.LogicalOr,
+  pattern: /\|\|/,
+  categories: [LogicalOperator],
+});
 
-const Increment = createToken({ name: TokenName.Increment, pattern: /\+\+/, categories: [UnaryOperator] });
-const Decrement = createToken({ name: TokenName.Decrement, pattern: /--/, categories: [UnaryOperator] });
-const LogicalNot = createToken({ name: TokenName.LogicalNot, pattern: /!/, categories: [UnaryOperator] });
+const Increment = createToken({
+  name: TokenName.Increment,
+  pattern: /\+\+/,
+  categories: [UnaryOperator],
+});
+const Decrement = createToken({
+  name: TokenName.Decrement,
+  pattern: /--/,
+  categories: [UnaryOperator],
+});
+const LogicalNot = createToken({
+  name: TokenName.LogicalNot,
+  pattern: /!/,
+  categories: [UnaryOperator],
+});
 
 const allTokens = [
   WhiteSpace,
@@ -235,7 +294,7 @@ const allTokens = [
   LogicalNot,
 
   Func,
-  // Reference,
+  Reference,
   Comma,
 ];
 

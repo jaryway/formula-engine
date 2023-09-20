@@ -1,21 +1,27 @@
 /* eslint-disable eqeqeq */
-import { CstNode, tokenMatcher } from 'chevrotain';
-import { ExecutionError, FunctionError } from './exceptions';
-import { tokens } from './lexer';
-import { FormulaParser } from './parser';
+import { CstNode, tokenMatcher } from "chevrotain";
+import { ExecutionError, FunctionError } from "./exceptions";
+import { tokens } from "./lexer";
+import { FormulaParser } from "./parser";
 
 export interface IVisitor {
   visit(cst: CstNode, state: any): any;
 }
 
 const throwUnknownOperatorError = (operator, ctx) => {
-  throw new ExecutionError(`Unknown operator: ${operator.image} at ${operator.startOffset}`, {
-    operator,
-    context: ctx,
-  });
+  throw new ExecutionError(
+    `Unknown operator: ${operator.image} at ${operator.startOffset}`,
+    {
+      operator,
+      context: ctx,
+    }
+  );
 };
 
-export function createEvalVisitor(parser: FormulaParser, functions: any): IVisitor {
+export function createEvalVisitor(
+  parser: FormulaParser,
+  functions: any
+): IVisitor {
   const FormulaVisitorBase = parser.getBaseCstVisitorConstructorWithDefaults();
 
   class InterpreterVisitor extends FormulaVisitorBase {
@@ -60,7 +66,8 @@ export function createEvalVisitor(parser: FormulaParser, functions: any): IVisit
         if (tokenMatcher(operator, tokens.EqualLoose)) return prev == value;
         if (tokenMatcher(operator, tokens.NotEqualLoose)) return prev != value;
         if (tokenMatcher(operator, tokens.EqualStrict)) return prev === value;
-        if (tokenMatcher(operator, tokens.NotEqualStrict)) return prev !== value;
+        if (tokenMatcher(operator, tokens.NotEqualStrict))
+          return prev !== value;
         if (tokenMatcher(operator, tokens.Greater)) return prev > value;
         if (tokenMatcher(operator, tokens.GreaterOrEqual)) return prev >= value;
         if (tokenMatcher(operator, tokens.Less)) return prev < value;
@@ -78,18 +85,21 @@ export function createEvalVisitor(parser: FormulaParser, functions: any): IVisit
       let left = this.visit(ctx.lhs, state);
       if (!ctx.rhs) return left;
 
-      return ctx.rhs.reduce((prev: number, cur: CstNode | CstNode[], i: string | number) => {
-        const operator = ctx.AdditionOperator[i];
-        const value = this.visit(cur, state);
+      return ctx.rhs.reduce(
+        (prev: number, cur: CstNode | CstNode[], i: string | number) => {
+          const operator = ctx.AdditionOperator[i];
+          const value = this.visit(cur, state);
 
-        if (tokenMatcher(operator, tokens.Addition)) return prev + value;
-        if (tokenMatcher(operator, tokens.Subtraction)) return prev - value;
-        if (tokenMatcher(operator, tokens.BitwiseAnd)) return prev & value;
-        if (tokenMatcher(operator, tokens.BitwiseOr)) return prev | value;
-        console.log('additionExpression', operator);
-        throwUnknownOperatorError(operator, ctx);
-        return prev;
-      }, left || 0);
+          if (tokenMatcher(operator, tokens.Addition)) return prev + value;
+          if (tokenMatcher(operator, tokens.Subtraction)) return prev - value;
+          if (tokenMatcher(operator, tokens.BitwiseAnd)) return prev & value;
+          if (tokenMatcher(operator, tokens.BitwiseOr)) return prev | value;
+          console.log("additionExpression", operator);
+          throwUnknownOperatorError(operator, ctx);
+          return prev;
+        },
+        left || 0
+      );
     }
 
     multiplicationExpression(ctx, state): any {
@@ -113,6 +123,7 @@ export function createEvalVisitor(parser: FormulaParser, functions: any): IVisit
       if (ctx.group) return this.visit(ctx.group, state);
       if (ctx.base) return this.visit(ctx.base, state);
       if (ctx.unaryExpression) return this.visit(ctx.unaryExpression, state);
+      if (ctx.reference) return this.visit(ctx.reference, state);
     }
 
     unaryExpression(ctx, state) {
@@ -133,49 +144,16 @@ export function createEvalVisitor(parser: FormulaParser, functions: any): IVisit
       });
     }
 
-    funcExpression(ctx, state): any {
-      const funcName = ctx.Func[0].image;
-      const func = functions[funcName];
-
-      if (!func) {
-        throw new ExecutionError(`Unknown function: ${funcName} at ${ctx.Function[0].startOffset}`, {
-          funcName,
-          context: ctx,
-        });
-      }
-
-      const args = this.visit(ctx.arguments[0], state);
-
-      try {
-        const result = func.apply({}, args);
-        return result;
-      } catch (err) {
-        throw new FunctionError(
-          `Function ${funcName} at ${ctx.Function[0].startOffset} thrown an error: ${err}, stacktrace: ${
-            (err as any).stack
-          }`,
-          {
-            originalError: err,
-            funcName,
-            function: ctx.Function[0],
-            context: ctx,
-          }
-        );
-      }
-    }
-
     reference(ctx, state): any {
       const name = ctx.Reference[0].image.slice(1, -1);
       return state.externals[name];
     }
 
-    parenthesisExpression(ctx, state): any {
-      return this.visit(ctx.expression, state);
-    }
-
     arguments(ctx, state): any {
       if (!ctx.additionExpression) return [];
-      const result = ctx.additionExpression.map((arg) => this.visit(arg, state));
+      const result = ctx.additionExpression.map((arg) =>
+        this.visit(arg, state)
+      );
       return result;
     }
 
@@ -188,19 +166,21 @@ export function createEvalVisitor(parser: FormulaParser, functions: any): IVisit
       const func = functions[funcName];
 
       if (!func) {
-        throw new ExecutionError(`Unknown function: ${funcName} at ${ctx.Func[0].startOffset}`, {
-          funcName,
-          context: ctx,
-        });
+        throw new ExecutionError(
+          `Unknown function: ${funcName} at ${ctx.Func[0].startOffset}`,
+          {
+            funcName,
+            context: ctx,
+          }
+        );
       }
-      
 
       const args = (ctx.args || []).map((m) => {
-        console.log('args.m', m);
+        console.log("args.m", m);
         return this.visit(m, state);
       });
 
-      console.log('args.args', args);
+      console.log("args.args", args);
 
       try {
         return func.apply({}, args);
@@ -231,7 +211,8 @@ export function createEvalVisitor(parser: FormulaParser, functions: any): IVisit
       }
 
       if (ctx.DateLiteral) return new Date(ctx.DateLiteral[0].image);
-      if (ctx.BooleanLiteral) return ctx.BooleanLiteral[0].image === 'true' ? true : false;
+      if (ctx.BooleanLiteral)
+        return ctx.BooleanLiteral[0].image === "true" ? true : false;
       if (ctx.NumberLiteral) return Number(ctx.NumberLiteral[0].image);
       if (ctx.NullLiteral) return null;
       if (ctx.UndefinedLiteral) return undefined;
@@ -261,3 +242,5 @@ export function createRefVisitor(parser: FormulaParser): IVisitor {
 
   return new RefVisitor();
 }
+
+// export function createCheckVisitor()
