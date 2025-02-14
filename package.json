@@ -1,9 +1,13 @@
 {
   "name": "@jaryway/formula-engine",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/formula-engine.cjs.js",
   "module": "dist/formula-engine.esm.js",
   "browser": "dist/formula-engine.umd.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
