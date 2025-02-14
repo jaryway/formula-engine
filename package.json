@@ -1,6 +1,6 @@
 {
   "name": "@jaryway/formula-engine",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/formula-engine.cjs.js",
   "module": "dist/formula-engine.esm.js",
   "browser": "dist/formula-engine.umd.js",
