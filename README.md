@@ -20,7 +20,7 @@ pnpm run dev
 import { FormulaEngine } from '@jaryway/formula-engine'
 const formula = new FormulaEngine()
 formula.exec('SUM(1,2,3,4,5,6)') // return 21
-formula.exec('SUM({arr})', 21, { arr: [1, 2, 3, 4, 5, 6] }) // return 21
+formula.exec('SUM({arr})', { arr: [1, 2, 3, 4, 5, 6] }) // return 21
 formula.exec('{a} + {b} * {c} - {d} / {e}', { a: 1, b: 2, c: 3, d: 4, e: 5 }) // return 21
 ```
 
