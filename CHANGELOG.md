@@ -1,4 +1,8 @@
-Changelog
+# Changelog
+
+
+## [0.0.6](///compare/v0.0.5...v0.0.6) (2025-02-14)
+
 ## 0.0.5 (2025-02-14)
 
 ## [0.0.4](https://github.com/rollup/rollup-starter-lib/compare/v0.0.3...v0.0.4) (2025-02-14)
