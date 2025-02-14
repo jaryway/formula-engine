@@ -1,6 +1,6 @@
 {
   "name": "@jaryway/formula-engine",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "main": "dist/formula-engine.cjs.js",
   "module": "dist/formula-engine.esm.js",
   "browser": "dist/formula-engine.umd.js",
@@ -21,15 +21,39 @@
   "commit-and-tag-version": {
     "header": "# Changelog\n",
     "types": [
-      {"type": "feat", "section": "Features"},
-      {"type": "fix", "section": "Bug Fixes"},
-      {"type": "chore", "hidden": true},
-      {"type": "docs", "hidden": true},
-      {"type": "style", "hidden": true},
-      {"type": "refactor", "hidden": true},
-      {"type": "perf", "hidden": true},
-      {"type": "test", "hidden": true}
-  ]
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "chore",
+        "hidden": true
+      },
+      {
+        "type": "docs",
+        "hidden": true
+      },
+      {
+        "type": "style",
+        "hidden": true
+      },
+      {
+        "type": "refactor",
+        "hidden": true
+      },
+      {
+        "type": "perf",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "hidden": true
+      }
+    ]
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^28.0.2",
