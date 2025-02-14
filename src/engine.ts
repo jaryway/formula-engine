@@ -36,6 +36,7 @@ export class FormulaEngine {
     // const externalNames = [];
     // this.refVisitor.visit(cst, { externalNames });
     // const externals = this.resolveReferences(externalNames);
+    // d
 
     const result = this.evalVisitor.visit(cst, { variables })
     return result

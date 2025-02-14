@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "noEmit": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "noImplicitAny": false,
     "esModuleInterop": true,
   },
