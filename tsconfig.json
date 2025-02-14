@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "noEmit": true,
+    "module": "CommonJS",
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+  },
+  "include": ["./src/*", "./__tests__/*"]
+}
