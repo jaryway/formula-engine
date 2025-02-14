@@ -1,6 +1,6 @@
 {
   "name": "@jaryway/formula-engine",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/formula-engine.cjs.js",
   "module": "dist/formula-engine.esm.js",
   "browser": "dist/formula-engine.umd.js",
@@ -11,6 +11,9 @@
     "release": "commit-and-tag-version",
     "prepare": "husky",
     "prettier": "prettier --check --write './**/*.{js,jsx,ts,tsx}'"
+  },
+  "commit-and-tag-version": {
+    "header": "Changelog"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^28.0.2",
