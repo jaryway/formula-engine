@@ -1,6 +1,6 @@
 {
   "name": "@jaryway/formula-engine",
-  "version": "0.0.2",
+  "version": "0.0.10",
   "main": "dist/formula-engine.cjs.js",
   "module": "dist/formula-engine.esm.js",
   "browser": "dist/formula-engine.umd.js",
@@ -15,8 +15,7 @@
     "changelog": "commit-and-tag-version",
     "prepare": "husky",
     "prettier": "prettier --check --write './**/*.{js,jsx,ts,tsx}'",
-    "prepublish": "npm run test && npm run build",
-    "prepublishOnly": "npm run changelog"
+    "prepublishOnly": "npm run test && npm run build && npm run changelog"
   },
   "commit-and-tag-version": {
     "header": "# Changelog\n"
