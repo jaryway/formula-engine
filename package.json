@@ -8,6 +8,13 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
+  "author": {
+    "name": "jaryway",
+    "email": "weizengxun@live.cn"
+  },
+  "repository": {
+    "url": "https://github.com/jaryway/formula-engine"
+  },
   "scripts": {
     "lint": "npx eslint --fix",
     "build": "rollup -c",
