@@ -74,23 +74,17 @@ export const COUNT = function (...args: any[]) {
   return flatten(args).length
 }
 
-export const COUNTIF = function (range, criteria) {
+export const COUNTIF = function (values: any[], criteria: string) {
   if (!/[<>=!]/.test(criteria)) {
-    criteria = '=="' + criteria + '"'
+    criteria = `=='${criteria}'`
   }
-  let matches = 0
-  for (let i = 0; i < range.length; i++) {
-    if (typeof range[i] !== 'string') {
-      if (eval(range[i] + criteria)) {
-        matches++
-      }
-    } else {
-      if (eval('"' + range[i] + '"' + criteria)) {
-        matches++
-      }
-    }
-  }
-  return matches
+
+  return (values || []).reduce((prev, cur) => {
+    const lhs = typeof cur !== 'string' ? cur : `'${cur}'`
+    const func = new Function(`return ${lhs}${criteria}`)
+    if (func()) return ++prev
+    return prev
+  }, 0)
 }
 
 /* FLOOR 将参数 number 向下舍入为最接近的 significance 的倍数。 */

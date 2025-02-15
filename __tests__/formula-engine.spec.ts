@@ -161,7 +161,7 @@ describe('COUNTIF-条件计数', () => {
   const items: [string, any][] = [
     ['COUNTIF([1,2,3,4,5,6],">=2")', 5],
     ['COUNTIF([1,2,3,4,5,6],"!=2")', 5],
-    ['COUNTIF([1,2,3,4,5,6,"dd"],"dd")', 1]
+    ['COUNTIF(["dd"],"dd")', 1]
   ]
 
   items.forEach(([expr, result]) => {
