@@ -1,5 +1,4 @@
-import { FormulaEngine } from '../src/index'
-// import * as functions from '../formula-engine/formula'
+import { FormulaEngine } from '../src'
 
 const engine = new FormulaEngine()
 
@@ -9,7 +8,13 @@ function assertEqual(formula: string, result: any, variables?: Record<string, an
 
 describe('加减乘除', () => {
   const items: any[] = [
-    //
+    ['++1', 2],
+    ['--1', 0],
+    ['1++', 1],
+    ['1--', 1],
+    ['++1 + ++1', 4],
+    ['1 + !2 * 3 / 4 & 5 !== 6 && 1 * 2 + 3', 5],
+    ['(1 + !2 * 3 / 4 & 5) !== (6 && 1 * 2 + 3)', true],
     ['10 + 20', 30],
     ['20 - 10', 10],
     ['10 * 20', 200],
@@ -22,37 +27,6 @@ describe('加减乘除', () => {
   items.forEach(([expr, result, variables]) => {
     it(`${expr}`, () => {
       assertEqual(expr, result, variables)
-    })
-  })
-})
-
-describe('AND', () => {
-  const items: [string, any][] = [
-    ['AND(1<5,1<6)', true],
-    ['AND(1<5,1<6,1<3)', true],
-    ['AND(1<5,1<6,1<3,1<2)', true],
-    ['AND(1<5,7<6)', false]
-  ]
-
-  items.forEach(([expr, result]) => {
-    it(`${expr}`, () => {
-      assertEqual(expr, result)
-    })
-  })
-})
-
-describe('OR', () => {
-  const items: [string, any][] = [
-    ['OR(1<5,1<6)', true],
-    ['OR(1<5,1<6,1<3)', true],
-    ['OR(1<5,1<6,1<3,1<2)', true],
-    ['OR(1<5,7<6)', true],
-    ['OR(7<5,7<6)', false]
-  ]
-
-  items.forEach(([expr, result]) => {
-    it(`${expr}`, () => {
-      assertEqual(expr, result)
     })
   })
 })
@@ -229,7 +203,7 @@ describe('FLOOR-向下取整', () => {
 
 describe('FIXED-舍入到指定的小数位数', () => {
   const items: [string, any][] = [
-    ['FIXED("ggg")', 'NaN'],
+    ['FIXED("ggg")', NaN],
     ['FIXED("10",1)', '10.0'],
     ['FIXED(10,1)', '10.0'],
     ['FIXED(10.3333333,1)', '10.3'],
@@ -308,7 +282,8 @@ describe('MOD-求余', () => {
     ['MOD(3,2)', 1],
     ['MOD(-3,2)', 1],
     ['MOD(3,-2)', -1],
-    ['MOD(3,0)', 'NaN']
+    ['MOD(3,-4)', -3],
+    ['MOD(3,0)', NaN]
   ]
 
   items.forEach(([expr, result]) => {
@@ -338,7 +313,8 @@ describe('MIN-最小值', () => {
     ['MIN(3,2,1)', 1],
     ['MIN(-3,2)', -3],
     ['MIN(3,3)', 3],
-    ['MIN("d")', 0]
+    ['MIN("d")', 0],
+    ['!MIN("d")', true]
   ]
 
   items.forEach(([expr, result]) => {
@@ -732,4 +708,139 @@ describe('SUMIFS', () => {
       assertEqual(expr, result)
     })
   })
+})
+
+describe('AND', () => {
+  const items: [string, any][] = [
+    [`AND(true,true)`, true],
+    [`AND(true,false)`, false],
+    [`AND(true,1)`, true],
+    [`AND(true,0)`, false],
+    [`AND(true,NaN)`, false],
+    [`AND(NaN,NaN)`, false],
+    [`AND(null,null)`, false],
+    [`AND(undefined,null)`, false],
+    [`AND(undefined,NaN)`, false],
+    [`AND(undefined,undefined)`, false],
+    ['AND(1<5,1<6)', true],
+    ['AND(1<5,1<6,1<3)', true],
+    ['AND(1<5,1<6,1<3,1<2)', true],
+    ['AND(1<5,7<6)', false]
+  ]
+
+  items.forEach(([expr, result]) => {
+    it(`${expr}`, () => {
+      assertEqual(expr, result)
+    })
+  })
+})
+describe('OR', () => {
+  const items: [string, any][] = [
+    [`OR(true,true)`, true],
+    [`OR(true,false)`, true],
+    [`OR(true,1)`, true],
+    [`OR(true,0)`, true],
+    [`OR(true,NaN)`, true],
+    [`OR(NaN,NaN)`, false],
+    [`OR(null,null)`, false],
+    [`OR(undefined,null)`, false],
+    [`OR(undefined,NaN)`, false],
+    [`OR(undefined,undefined)`, false],
+    [`OR(undefined,undefined,true)`, true],
+    ['OR(1<5,1<6)', true],
+    ['OR(1<5,1<6,1<3)', true],
+    ['OR(1<5,1<6,1<3,1<2)', true],
+    ['OR(1<5,7<6)', true],
+    ['OR(7<5,7<6)', false]
+  ]
+
+  items.forEach(([expr, result]) => it(`${expr}`, () => assertEqual(expr, result)))
+})
+
+describe('IFS', () => {
+  const items: [string, any, any?][] = [
+    [`IFS(true,1,true,2,true,3)`, 1],
+    [`IFS(false,1,true,2,true,3)`, 2],
+    [`IFS(false,1,false,2,true,3)`, 3],
+    [`IFS(false,1,false,2,false,3)`, undefined],
+    [`IFS({n}<60,"不及格",{n}<=79,"及格",{n}<=89,"良好",{n}>=90,"优秀")`, '不及格', { n: 59 }],
+    [`IFS({n}<60,"不及格",{n}<=79,"及格",{n}<=89,"良好",{n}>=90,"优秀")`, '优秀', { n: 100 }]
+  ]
+
+  items.forEach(([expr, result, vars]) => it(`${expr}`, () => assertEqual(expr, result, vars)))
+})
+
+describe('NOT', () => {
+  const items: [string, any, any?][] = [
+    [`NOT(true)`, false],
+    [`NOT(1>2)`, true],
+    [`NOT(1<2)`, false],
+    [`NOT({n}<2)`, true, { n: 10 }]
+  ]
+
+  items.forEach(([expr, result, vars]) => it(`${expr}`, () => assertEqual(expr, result, vars)))
+})
+
+describe('XOR', () => {
+  const items: [string, any, any?][] = [
+    [`XOR(true)`, true],
+    [`XOR(false)`, true],
+    [`XOR(true,true)`, false],
+    [`XOR(false,false)`, false],
+    [`XOR(true,false)`, true],
+
+    [`XOR(true,true,true)`, true],
+    [`XOR(false,true,true)`, false],
+    [`XOR(true,false,true)`, false],
+    [`XOR(true,true,false)`, false],
+
+    [`XOR(false,false,false)`, false],
+    [`XOR(true,false,false)`, true],
+    [`XOR(false,true,false)`, true],
+    [`XOR(false,false,true)`, true]
+  ]
+
+  items.forEach(([expr, result, vars]) => it(`${expr}`, () => assertEqual(expr, result, vars)))
+})
+
+describe('CONCATENATE', () => {
+  const items: [string, any, any?][] = [
+    [`CONCATENATE('a','b','c')`, 'abc'],
+    [`CONCATENATE(1,2,3)`, '123'],
+    [
+      `CONCATENATE("name:",{name},CHAR(10),"gender:",{gender},CHAR(10),"phone:",{phone})`,
+      'name:Tom\ngender:Man\nphone:1111',
+      { name: 'Tom', gender: 'Man', phone: '1111' }
+    ]
+  ]
+
+  items.forEach(([expr, result, vars]) => it(`${expr}`, () => assertEqual(expr, result, vars)))
+})
+
+describe('CHAR', () => {
+  const items: [string, any, any?][] = [
+    [`CHAR(9)`, '\t'],
+    [`CHAR(10)`, '\n'],
+    [`CHAR(34)`, '"'],
+    [`CHAR(39)`, "'"],
+    [`CHAR(92)`, '\\']
+  ]
+
+  items.forEach(([expr, result, vars]) => it(`${expr}`, () => assertEqual(expr, result, vars)))
+})
+describe('EXACT', () => {
+  const items: [string, any, any?][] = [
+    [`EXACT("9","9")`, true],
+    [`EXACT(10,10)`, true],
+    [`EXACT(0,0)`, true],
+    [`EXACT(true,true)`, true],
+    [`EXACT(true,false)`, false],
+    [`EXACT(1,true)`, false],
+    [`EXACT(NaN,NaN)`, false],
+    [`EXACT(null,null)`, true],
+    [`EXACT(undefined,undefined)`, true],
+    [`EXACT(null,undefined)`, false]
+  ]
+
+  items.forEach(([expr, result, vars]) => it(`${expr}`, () => assertEqual(expr, result, vars)))
 })
