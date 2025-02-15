@@ -2,9 +2,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "noEmit": true,
-    "module": "CommonJS",
+    "module": "ESNext",
     "noImplicitAny": false,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "include": ["./src/*", "./__tests__/*"]
 }
