@@ -5,7 +5,7 @@ import { createEvalVisitor, IVisitor } from './visitor'
 import * as formulas from './formula'
 import * as formulaChecks from './formula-check'
 
-export type FunctionsResolver = Record<string, Function>
+export type FunctionsResolver = Record<string, (...args: never) => unknown>
 export type ReferenceResolver = (names: string[]) => Record<string, any>
 export type ReferenceResolverAsync = (names: string[]) => Promise<Record<string, any>>
 

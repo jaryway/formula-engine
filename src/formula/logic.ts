@@ -1,12 +1,12 @@
 export function AND(...args: any[]) {
   return args.reduce((prev, cur) => {
-    return prev && cur
+    return prev && !!cur
   }, true)
 }
 
 export function OR(...args: any[]) {
   return args.reduce((prev, cur) => {
-    return prev || cur
+    return prev || !!cur
   }, false)
 }
 
@@ -31,10 +31,19 @@ export const IFS = (...args) => {
   }
 }
 
-export const NOT = (...args) => {
-  return !args[0]
+export const NOT = (logical: boolean) => {
+  return !logical
 }
+/**
+ * 异或运算
+ * @param args boolean[]
+ * @returns 如果两个逻辑值相同，返回 false, 如果两个逻辑值不同，返回 true
+ */
+export const XOR = function (...args: boolean[]) {
+  if (args.length < 2) return true
 
-export const XOR = function (...args: any[]) {
-  return !!(args[0] ^ args[1])
+  return args.reduce((prev, cur, i) => {
+    if (i === 0) return prev
+    return prev !== cur
+  }, args[0])
 }

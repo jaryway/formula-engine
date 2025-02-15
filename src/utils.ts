@@ -13,16 +13,16 @@ export const isNullUndefined = (s: any) => isUndefined(s) || isNull(s)
 export const getType = (obj: any) => toString.call(obj)
 export const isDate = isType<Date>('Date')
 export const isString = isType<string>('String')
-export const isObject = isType<Object>('Object')
+export const isObject = isType<object>('Object')
 export const isNumber = isType<number>('Number')
 export const isNumeric = (e: any) => {
-  var t = e && e.toString()
+  const t = e && e.toString()
   return !Array.isArray(e) && t - parseFloat(t) + 1 >= 0
 }
 export const isBoolean = isType<boolean>('Boolean')
 export const parseNumber = function (e: any) {
-  var t = parseFloat(e)
-  return !isNaN(t) && isFinite(t) ? t : null
+  const num = parseFloat(e)
+  return !isNaN(num) && isFinite(num) ? num : null
 }
 
 /* 根据角度求弧度 */
@@ -59,7 +59,7 @@ export function numberToChinese(num: number, t: number = 0) {
 
   const negativeChar: string = num < 0 ? config.ch_f : ''
 
-  let arr: any[] = ['', '', '']
+  const arr: any[] = ['', '', '']
   for (let i = 0; i < integerPart.length; i++) {
     const cur = integerPart[integerPart.length - 1 - i]
     const idx = 3 - Math.ceil((i + 1) / 4)
@@ -72,7 +72,7 @@ export function numberToChinese(num: number, t: number = 0) {
     .map((item) => {
       let res = ''
       if (item === '0000') return res
-      for (var i = 0; i < item.length; i++) {
+      for (let i = 0; i < item.length; i++) {
         const temp = item.length - i - 1
         const unit = temp ? chineseUnits[temp] : ''
         const digit = Number(item[i])

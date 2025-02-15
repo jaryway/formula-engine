@@ -37,7 +37,7 @@ export const DAYS = function (...args: any[]) {
   return dayjs(args[0].valueOf()).diff(dayjs(args[1].valueOf()), 'days').toString()
 }
 // TODO
-export const DAYS360 = function (...args: any[]) {
+export const DAYS360 = function (..._args: any[]) {
   throw new NotImplementedException()
 }
 
@@ -68,7 +68,7 @@ export const MONTH = function (...args: any[]) {
 }
 
 // TODO
-export const NETWORKDAYS = function (...args: any[]) {
+export const NETWORKDAYS = function (..._args: any[]) {
   throw new NotImplementedException()
 }
 
@@ -77,7 +77,7 @@ export const NOW = function () {
 }
 
 // TODO
-export const SYSTIME = function (...args: any[]) {
+export const SYSTIME = function (..._args: any[]) {
   throw new NotImplementedException()
 }
 
@@ -105,12 +105,12 @@ export const WEEKDAY = function (...args: any[]) {
 }
 
 export const WEEKNUM = function (timestamp, returnType = 1) {
-  let returnTypeArr = { 1: 0, 2: 1, 11: 1, 12: 2, 13: 3, 14: 4, 15: 5, 16: 6, 17: 0 }
-  let returnTypeNum = returnTypeArr[returnType]
-  let timestampStart = dayjs(new Date(dayjs(timestamp).year(), 0, 1)).valueOf()
-  let n = (returnTypeNum + 7 - dayjs(timestampStart).day()) % 7 // 当周第几天
-  let currentWeekCount = n > 0 ? 1 : 0 // 时间戳当前算不算新的一周
-  let c = timestampStart + 24 * n * 60 * 60 * 1e3
+  const returnTypeArr = { 1: 0, 2: 1, 11: 1, 12: 2, 13: 3, 14: 4, 15: 5, 16: 6, 17: 0 }
+  const returnTypeNum = returnTypeArr[returnType]
+  const timestampStart = dayjs(new Date(dayjs(timestamp).year(), 0, 1)).valueOf()
+  const n = (returnTypeNum + 7 - dayjs(timestampStart).day()) % 7 // 当周第几天
+  const currentWeekCount = n > 0 ? 1 : 0 // 时间戳当前算不算新的一周
+  const c = timestampStart + 24 * n * 60 * 60 * 1e3
   return Math.floor((timestamp - c) / (24 * 60 * 60 * 1e3) / 7 + 1) + currentWeekCount
 }
 

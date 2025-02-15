@@ -117,7 +117,7 @@ export function TRUE(...args: any[]) {
   checkParamsType({
     name: 'TRUE',
     params: args,
-    checkFunction: (e) => {
+    checkFunction: (_e) => {
       return true
     },
     maxCount: 0,
@@ -160,7 +160,7 @@ export const NOT = (...args) => {
   checkParamsType({
     name: 'NOT',
     params: args,
-    checkFunction: function (e, t) {
+    checkFunction: function (e, _t) {
       return isBooleanType(e)
     },
     minCount: 1,
@@ -218,7 +218,7 @@ export const EXACT = (...args: any[]) => {
   checkParamsType({
     name: 'EXACT',
     params: args,
-    checkFunction: (e, t, r) => {
+    checkFunction: (e, _t, r) => {
       return r[0] === r[1] && (isStringType(e) || isNumberType(e))
     },
     minCount: 2,
@@ -689,7 +689,7 @@ export const ROUND = function (...args: any[]) {
   return 'number'
 }
 
-export const RAND = function (...args: any[]) {
+export const RAND = function (..._args: any[]) {
   return 'number'
 }
 
@@ -972,7 +972,7 @@ export const ISOWEEKNUM = function (...args: any[]) {
   return 'number'
 }
 
-export const NOW = function (...args: any[]) {
+export const NOW = function (..._args: any[]) {
   return 'date'
 }
 
@@ -1018,7 +1018,7 @@ export const TIME = function (...args: any[]) {
   return 'number'
 }
 
-export const TODAY = function (...args: any[]) {
+export const TODAY = function (..._args: any[]) {
   return 'date'
 }
 
@@ -1027,7 +1027,11 @@ export const WORKDAY = function (...args: any[]) {
     name: 'WORKDAY',
     params: args,
     checkFunction: function (e, t) {
-      return 0 === t ? isNumberType(e) || isDateType(e) : 1 === t ? isNumberType(e) || isStringType(e) : isArrayType(e) || isNumberType(e)
+      return 0 === t
+        ? isNumberType(e) || isDateType(e)
+        : 1 === t
+          ? isNumberType(e) || isStringType(e)
+          : isArrayType(e) || isNumberType(e)
     },
     minCount: 2,
     paramType: ['number', 'date', 'string'],

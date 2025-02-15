@@ -16,12 +16,16 @@ export const CHAR = (...args: any[]) => {
   const e = args[0]
   return 9 === e || 10 === e || 34 === e || 39 === e || 92 === e ? String.fromCharCode(e) : ''
 }
-
-export const EXACT = (...args: any[]) => {
-  return args[0] === args[1]
+/**
+ * 比较两个字符串是否完全相同（区分大小写）
+ * @param args
+ * @returns
+ */
+export const EXACT = (text1: string, text2: string) => {
+  return text1 === text2
 }
 
-export const IP = (...args: any[]) => {
+export const IP = (..._args: any[]) => {
   throw new NotImplementedException()
 }
 
@@ -39,7 +43,7 @@ export const JOIN = function (arrToJoin, joiner) {
 }
 
 export const LEFT = (...args: any[]) => {
-  var r = isNull(args[1]) ? 1 : args[0]
+  const r = isNull(args[1]) ? 1 : args[0]
   return args[0] ? args[0].substring(0, r) : ''
 }
 

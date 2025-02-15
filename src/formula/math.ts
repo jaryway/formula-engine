@@ -1,4 +1,3 @@
-/* eslint-disable no-eval */
 import Big from 'big.js'
 import { isNull, isNullUndefined, isNumber, isNumeric, makeArray, parseNumber, radians } from '../utils'
 
@@ -131,9 +130,9 @@ export const FLOOR = function (number, significance) {
 */
 export const FIXED = function (number, decimals) {
   const r = parseNumber(number)
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+
   const s = decimals === undefined ? 0 : decimals
-  return isNull(r) ? 'NaN' : new Big(r || 0).toFixed(s).toString()
+  return isNull(r) ? NaN : new Big(r || 0).toFixed(s).toString()
 }
 
 /* 将数字向下舍入到最接近的整数 */
@@ -156,32 +155,36 @@ export const LOG = function (number, base) {
   return Math.log(number) / Math.log(base)
 }
 
-export const MOD = function (dividend, divisor) {
-  dividend = parseNumber(dividend)
-  divisor = parseNumber(divisor)
-  if (divisor === 0) {
-    return 'NaN'
+/**
+ * 求余数
+ * @param dividend 要计算余数的被除数
+ * @param divisor 除数
+ * @returns 返回两数相除的余数
+ */
+export const MOD = function (dividend: number, divisor: number) {
+  const num1 = parseNumber(dividend)
+  const num2 = parseNumber(divisor)
+  if (num2 === 0) {
+    return NaN
   }
-  const modulus = Math.abs(dividend % divisor)
-  return divisor > 0 ? modulus : -modulus
+  const num = Math.abs(num1 % num2)
+  return num2 > 0 ? num : -num
 }
 
 export const MAX = function (...args: any[]) {
-  for (var e = args.length, t = new Array(e), r = 0; r < e; r++) t[r] = args[r]
-  const n = t.filter((item) => isNumber(item))
-  return 0 === n.length ? 0 : Math.max(...n)
+  const nums = args.filter((item) => isNumber(item))
+  return 0 === nums.length ? 0 : Math.max(...nums)
 }
 
 export const MIN = function (...args: any[]) {
-  for (var e = args.length, t = new Array(e), r = 0; r < e; r++) t[r] = args[r]
-  var n = t.filter((item) => isNumber(item))
-  return 0 === n.length ? 0 : Math.min(...n)
+  const nums = args.filter((item) => isNumber(item))
+  return 0 === nums.length ? 0 : Math.min(...nums)
 }
 
 export const POWER = function (number, power) {
   number = parseNumber(number)
   power = parseNumber(power)
-  var result = Math.pow(number, power)
+  const result = Math.pow(number, power)
 
   return result
 }
@@ -241,9 +244,12 @@ export const SUM = function (...args) {
     .filter((item: any) => {
       return isNumeric(item)
     })
-    .reduce((prev: Big, cur: any) => {
-      return prev.plus(Big(parseFloat(cur))) as Big
-    }, Big(0) as Big)
+    .reduce(
+      (prev: Big, cur: any) => {
+        return prev.plus(Big(parseFloat(cur))) as Big
+      },
+      Big(0) as Big
+    )
 
   return res.toNumber()
 }
@@ -266,7 +272,7 @@ export const SUMIF = function (range: string[], criteria: string, sum_range: num
   if (isNullUndefined(criteria) || criteria === '') return 0
 
   return final_range.reduce((prev, cur, index) => {
-    var sum_value = final_sum_range[index]
+    const sum_value = final_sum_range[index]
     // 条件成立并且
     if (cur === criteria) return prev + ~~sum_value
 
@@ -309,12 +315,15 @@ export const SUMPRODUCT = function (...args: Array<number[]>) {
   const max = Math.max(...args.map((m) => m.length))
   let result = 0
   for (let i = 0; i < max; i++) {
-    const product = args.reduce((prev, cur) => {
-      const num = cur[i]
-      if (isNullUndefined(num) || !isNumber(num)) return prev
-      if (prev === undefined) return num
-      return prev * num
-    }, undefined as number | undefined)
+    const product = args.reduce(
+      (prev, cur) => {
+        const num = cur[i]
+        if (isNullUndefined(num) || !isNumber(num)) return prev
+        if (prev === undefined) return num
+        return prev * num
+      },
+      undefined as number | undefined
+    )
 
     result += product === undefined ? 0 : product
   }

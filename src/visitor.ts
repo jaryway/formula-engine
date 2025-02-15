@@ -1,4 +1,3 @@
-/* eslint-disable eqeqeq */
 import { CstNode, tokenMatcher } from 'chevrotain'
 import Big from 'big.js'
 import getIn from 'lodash/get'
@@ -11,11 +10,11 @@ const toTag = function (e) {
 }
 
 const isDate = (e: any): e is Date => '[object Date]' === toTag(e)
-const isString = (e: any): e is String => '[object String]' === toTag(e)
-const isNumber = (e: any): e is Number => '[object Number]' === toTag(e)
+const isString = (e: any): e is string => '[object String]' === toTag(e)
+const isNumber = (e: any): e is number => '[object Number]' === toTag(e)
 const isBoolean = (e: any): e is boolean => '[object Boolean]' === toTag(e)
 const isNumeric = (e: any) => {
-  var t = e && e.toString()
+  const t = e && e.toString()
   return !Array.isArray(e) && t - parseFloat(t) + 1 >= 0
 }
 
@@ -50,7 +49,7 @@ export function createEvalVisitor(parser: FormulaParser, functions: any, mode: '
     }
 
     logicalExpression(ctx, state) {
-      let left = this.visit(ctx.lhs, state)
+      const left = this.visit(ctx.lhs, state)
       if (!ctx.rhs) return left
 
       return ctx.rhs.reduce((prev: number, cur, i) => {
@@ -65,7 +64,7 @@ export function createEvalVisitor(parser: FormulaParser, functions: any, mode: '
     }
 
     comparisonExpression(ctx, state): any {
-      let left = this.visit(ctx.lhs, state)
+      const left = this.visit(ctx.lhs, state)
       if (!ctx.rhs) return left
 
       // console.log('comparisonExpression', left)
@@ -101,7 +100,7 @@ export function createEvalVisitor(parser: FormulaParser, functions: any, mode: '
     }
 
     additionExpression(ctx, state): any {
-      let left = this.visit(ctx.lhs, state)
+      const left = this.visit(ctx.lhs, state)
       if (!ctx.rhs) return left
 
       if (mode === 'check') {
@@ -156,7 +155,7 @@ export function createEvalVisitor(parser: FormulaParser, functions: any, mode: '
     }
 
     multiplicationExpression(ctx, state): any {
-      let left = this.visit(ctx.lhs, state)
+      const left = this.visit(ctx.lhs, state)
       if (!ctx.rhs) return left
 
       if (mode === 'check') {
@@ -164,7 +163,7 @@ export function createEvalVisitor(parser: FormulaParser, functions: any, mode: '
 
         return (ctx.rhs as any[]).reduce((prev: Big, cur: any, i: number) => {
           const operator = ctx.MultiplicationOperator[i]
-          let value = this.visit(cur, state)
+          const value = this.visit(cur, state)
 
           if (!isNumberType(value)) throw new ExecutionError('multiplicationExpression: rhs is not a number', {})
           if (tokenMatcher(operator, tokens.Multiplication)) return 'number'
@@ -176,18 +175,21 @@ export function createEvalVisitor(parser: FormulaParser, functions: any, mode: '
       }
 
       return (ctx.rhs as any[])
-        .reduce((prev: Big, cur: any, i: number) => {
-          const operator = ctx.MultiplicationOperator[i]
-          let value = this.visit(cur, state)
+        .reduce(
+          (prev: Big, cur: any, i: number) => {
+            const operator = ctx.MultiplicationOperator[i]
+            let value = this.visit(cur, state)
 
-          if (!isNumeric(value)) value = 0
-          if (tokenMatcher(operator, tokens.Multiplication)) return prev.times(value)
-          if (tokenMatcher(operator, tokens.Division)) return prev.div(value)
+            if (!isNumeric(value)) value = 0
+            if (tokenMatcher(operator, tokens.Multiplication)) return prev.times(value)
+            if (tokenMatcher(operator, tokens.Division)) return prev.div(value)
 
-          throwUnknownOperatorError(operator, ctx)
+            throwUnknownOperatorError(operator, ctx)
 
-          return prev
-        }, Big(left || 0))
+            return prev
+          },
+          Big(left || 0)
+        )
         .toNumber()
     }
 
