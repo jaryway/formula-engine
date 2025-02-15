@@ -15,6 +15,14 @@
   "repository": {
     "url": "https://github.com/jaryway/formula-engine"
   },
+  "keywords": [
+    "formula",
+    "formula-engine",
+    "lowcode formula",
+    "typescript",
+    "javascript",
+    "chevrotain"
+  ],
   "scripts": {
     "lint": "npx eslint --fix",
     "build": "rollup -c",
