@@ -29,8 +29,8 @@ export default [
     external: [
       'chevrotain',
       'big.js',
-      'lodash-es',
-      'lodash-es/get',
+      'lodash',
+      'lodash/get',
       'dayjs',
       'dayjs/plugin/weekOfYear',
       'dayjs/plugin/isoWeek',
